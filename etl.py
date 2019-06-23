@@ -40,7 +40,7 @@ def process_song_data(spark, input_data, output_data):
     - Create artists table and save it as parquet
     """
     # get filepath to song data file
-    song_data = input_data + "/song-data/A/*/*/"
+    song_data = input_data + "/song-data/*/*/*/"
 
     # read song data file
     logger.info("load song-data")
@@ -50,7 +50,7 @@ def process_song_data(spark, input_data, output_data):
     # extract columns to create songs table
     logger.info("create songs")
     songs_table = spark.sql("""
-    SELECT 
+    SELECT DISTINCT 
         song_id
         , title
         , artist_id
@@ -67,7 +67,7 @@ def process_song_data(spark, input_data, output_data):
     # extract columns to create artists table
     logger.info("create artists")
     artists_table = spark.sql("""
-    SELECT 
+    SELECT DISTINCT 
         artist_id
         , artist_name as name
         , artist_location as location
@@ -106,7 +106,7 @@ def process_log_data(spark, input_data, output_data):
     # extract columns for users table
     logger.info("create users")
     users_table = spark.sql("""
-    SELECT 
+    SELECT DISTINCT 
         userId as user_id
         , firstName as first_name
         , lastName as last_name
@@ -133,7 +133,7 @@ def process_log_data(spark, input_data, output_data):
     # extract columns to create time table
     logger.info("create time")
     time_table = spark.sql("""
-    SELECT 
+    SELECT DISTINCT 
         ts as start_time
         , timestamp
         , cast(date_format(timestamp, "HH") as INTEGER) as hour
@@ -158,7 +158,7 @@ def process_log_data(spark, input_data, output_data):
     # extract columns from joined song and log datasets to create songplays table
     logger.info("create songplays")
     songplays_table = spark.sql("""
-    SELECT 
+    SELECT DISTINCT 
         ts as start_time
         , month(timestamp) as month
         , year(timestamp) as year
